@@ -35,6 +35,7 @@ import java.util.List;
 public class SecurityConfig {
     private final String[] WHITE_LIST = new String[]{
             "/auth/**",
+            "/medicines/**",
             "/error",
             "/api-docs",
             "/swagger-ui.html",

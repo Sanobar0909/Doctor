@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -20,6 +19,9 @@ public class User extends BaseEntity {
     private String full_name;
     private String email;
     private String password;
+    @ManyToOne
+    @JoinColumn(name = "files_id")
+    private Files files;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -29,11 +31,12 @@ public class User extends BaseEntity {
     private List<Role> roles = new ArrayList<>();
 
     @Builder
-    public User(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, String full_name, String email, String password, List<Role> roles) {
+    public User(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, String full_name, String email, String password, Files files, List<Role> roles) {
         super(id, createBy, createdDate, updatedDate, updateBy);
         this.full_name = full_name;
         this.email = email;
         this.password = password;
+        this.files = files;
         this.roles = (roles != null) ? roles : new ArrayList<>();
     }
 }

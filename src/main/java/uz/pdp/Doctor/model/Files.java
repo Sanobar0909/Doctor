@@ -12,4 +12,5 @@ import lombok.*;
 public class Files extends BaseEntity {
     private String path;
     private String url;
+    private String name;
 }

@@ -1,13 +1,11 @@
 package uz.pdp.Doctor.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.pdp.Doctor.enums.MessageType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,9 +31,12 @@ public class Message extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "files_id")
     private Files files;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MessageType messageType;
 
     @Builder
-    public Message(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Chat chat, String from_id, String for_id, String text, LocalDate date, LocalTime time, Files files) {
+    public Message(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Chat chat, String from_id, String for_id, String text, LocalDate date, LocalTime time, Call call, Files files, MessageType messageType) {
         super(id, createBy, createdDate, updatedDate, updateBy);
         this.chat = chat;
         this.from_id = from_id;
@@ -43,6 +44,8 @@ public class Message extends BaseEntity{
         this.text = text;
         this.date = date;
         this.time = time;
+        this.call = call;
         this.files = files;
+        this.messageType = messageType;
     }
 }

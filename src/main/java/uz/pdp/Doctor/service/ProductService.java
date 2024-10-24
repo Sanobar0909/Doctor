@@ -27,7 +27,7 @@ public class ProductService {
 
     public String addProduct(ProductDTO productDTO, MultipartFile file) {
         Product product = ProductMapper.PRODUCT_MAPPER.toEntity(productDTO);
-        Files files = s3StorageService.saveImage(file, AWS_PUBLIC);
+        Files files = s3StorageService.save(file, AWS_PUBLIC);
         files.setUrl(AWS_URL + files.getPath());
         Files savedFile = filesRepo.save(files);
         product.setFiles(savedFile);

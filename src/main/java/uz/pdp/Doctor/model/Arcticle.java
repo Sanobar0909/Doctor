@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class Arcticle extends BaseEntity{
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Doctor author;
     private String name;
     private String desc;
     private LocalDate date;
@@ -29,8 +32,9 @@ public class Arcticle extends BaseEntity{
     private Reyting reyting;
 
     @Builder
-    public Arcticle(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, String name, String desc, LocalDate date, Files image, Reyting reyting) {
+    public Arcticle(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Doctor author, String name, String desc, LocalDate date, Files image, Reyting reyting) {
         super(id, createBy, createdDate, updatedDate, updateBy);
+        this.author = author;
         this.name = name;
         this.desc = desc;
         this.date = date;

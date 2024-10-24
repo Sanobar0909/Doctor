@@ -1,5 +1,6 @@
 package uz.pdp.Doctor.dto;
 
+import uz.pdp.Doctor.enums.MessageType;
 import uz.pdp.Doctor.model.Chat;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ public record MessageDTO (
         String from_id,
         String for_id,
         String text,
-        FileDTO fileDTO
+        CallDTO callDTO,
+        MessageType messageType
 ){
 }

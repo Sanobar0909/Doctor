@@ -75,7 +75,7 @@ public class UserService {
         Role savedRole = roleRepo.save(newRole);
         user.setRoles(Collections.singletonList(savedRole));
 
-        Files files = s3StorageService.saveImage(file, AWS_PUBLIC);
+        Files files = s3StorageService.save(file, AWS_PUBLIC);
         files.setUrl(AWS_URL + files.getPath());
         Files savedFile = filesRepo.save(files);
         user.setFiles(savedFile);

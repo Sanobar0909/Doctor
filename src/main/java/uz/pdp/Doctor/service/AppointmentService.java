@@ -9,7 +9,6 @@ import uz.pdp.Doctor.repository.FilesRepo;
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
-    private final FilesRepo filesRepo;
     private final AppointmentRepo appointmentRepo;
     private final DoctorRepo doctorRepo;
 

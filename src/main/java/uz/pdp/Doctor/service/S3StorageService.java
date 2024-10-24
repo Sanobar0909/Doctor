@@ -17,7 +17,7 @@ import java.io.InputStream;
 
 @Service
 public class S3StorageService {
-    private final String bucketName = "sanobar";
+    private final String bucketName = "medicsg40website";
     private final AmazonS3 s3Client;
     private final FilesRepo imagesRepo;
 
@@ -41,7 +41,7 @@ public class S3StorageService {
         }
     }
 
-    public Files saveImage(MultipartFile file, String folder) {
+    public Files save(MultipartFile file, String folder) {
         String fileUrl = upload(file, folder);
         Files image = new Files();
         image.setPath(fileUrl);
@@ -63,12 +63,12 @@ public class S3StorageService {
         return convFile;
     }
 
-    public void deleteImage(String imagePath) {
+    public void delete(String path) {
         try {
-            s3Client.deleteObject(new DeleteObjectRequest(bucketName, imagePath));
-            System.out.println("Image deleted successfully: " + imagePath);
+            s3Client.deleteObject(new DeleteObjectRequest(bucketName, path));
+            System.out.println("File deleted successfully: " + path);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to delete image: " + imagePath, e);
+            throw new RuntimeException("Failed to delete file: " + path, e);
         }
     }
 }

@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.Doctor.model.Files;
-import uz.pdp.Doctor.repository.ImagesRepo;
+import uz.pdp.Doctor.repository.FilesRepo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,9 +19,9 @@ import java.io.InputStream;
 public class S3StorageService {
     private final String bucketName = "sanobar";
     private final AmazonS3 s3Client;
-    private final ImagesRepo imagesRepo;
+    private final FilesRepo imagesRepo;
 
-    public S3StorageService(AmazonS3 s3Client, ImagesRepo imagesRepo) {
+    public S3StorageService(AmazonS3 s3Client, FilesRepo imagesRepo) {
         this.s3Client = s3Client;
         this.imagesRepo = imagesRepo;
     }

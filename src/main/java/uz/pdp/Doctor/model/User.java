@@ -29,7 +29,6 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles = new ArrayList<>();
-
     @Builder
     public User(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, String full_name, String email, String password, Files files, List<Role> roles) {
         super(id, createBy, createdDate, updatedDate, updateBy);

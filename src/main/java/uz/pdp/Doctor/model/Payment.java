@@ -10,7 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Payment extends BaseEntity{
-    private Integer concultation;
-    private Integer other_expenses;
+    private double subtotals;
+    private double other_expenses;
+    private double totals;
     private Integer card_number;
 }

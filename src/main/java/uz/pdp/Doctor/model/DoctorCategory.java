@@ -12,23 +12,21 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "chat")
+@Table(name = "doctor_category")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Chat extends BaseEntity{
+public class DoctorCategory extends BaseEntity{
+    private String name;
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "files_id")
+    private Files icon;
 
     @Builder
-    public Chat(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Doctor doctor, User user) {
+    public DoctorCategory(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, String name, Files icon) {
         super(id, createBy, createdDate, updatedDate, updateBy);
-        this.doctor = doctor;
-        this.user = user;
+        this.name = name;
+        this.icon = icon;
     }
 }
 

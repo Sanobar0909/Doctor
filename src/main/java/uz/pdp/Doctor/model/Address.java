@@ -1,5 +1,4 @@
 package uz.pdp.Doctor.model;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,22 +11,24 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "chat")
+@Table(name = "address")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Chat extends BaseEntity{
-    @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
+public class Address extends BaseEntity{
+    private String street;
+    private double latitude;
+    private double langitude;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Chat(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Doctor doctor, User user) {
+    public Address(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, String street, double latitude, double langitude, User user) {
         super(id, createBy, createdDate, updatedDate, updateBy);
-        this.doctor = doctor;
+        this.street = street;
+        this.latitude = latitude;
+        this.langitude = langitude;
         this.user = user;
     }
 }

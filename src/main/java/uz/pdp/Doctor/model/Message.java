@@ -1,11 +1,13 @@
 package uz.pdp.Doctor.model;
 
-/*
+
+
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.pdp.Doctor.enums.MessageType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,4 +52,4 @@ public class Message extends BaseEntity{
     }
 }
 
-*/
+

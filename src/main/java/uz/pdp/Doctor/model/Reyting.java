@@ -2,6 +2,7 @@ package uz.pdp.Doctor.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import uz.pdp.Doctor.enums.Type;
 
 @Entity
 @Getter

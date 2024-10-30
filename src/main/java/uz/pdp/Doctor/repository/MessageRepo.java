@@ -6,6 +6,6 @@ import uz.pdp.Doctor.model.Message;
 
 import java.util.List;
 
-public interface MessageRepo extends JpaRepository<Message, Integer> {
+public interface MessageRepo extends JpaRepository<Message, String> {
     List<Message> findAllByChatIs(Chat chat);
 }

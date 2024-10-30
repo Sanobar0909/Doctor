@@ -13,7 +13,7 @@ import java.util.Optional;
 public class PaymentService {
     private final PaymentRepo paymentRepo;
 
-    public Optional<Payment> getPaymentForUser(User user) {
-        return paymentRepo.findByUserId(user.getId());
-    }
+//    public Optional<Payment> getPaymentForUser(User user) {
+//        return paymentRepo.findByUserId(user.getId());
+//    }
 }

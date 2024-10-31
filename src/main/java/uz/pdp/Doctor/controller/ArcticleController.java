@@ -32,10 +32,4 @@ public class ArcticleController {
         List<Arcticle> arcticleList = arcticleService.getAll();
         return ResponseEntity.ok(arcticleList);
     }
-
-    @GetMapping("/getAllByReytingStar")
-    public ResponseEntity<List<Arcticle>> getAllByReytingStar(@RequestParam("star") float star){
-        List<Arcticle> allByReytingStar = arcticleService.getAllByReytingStar(star);
-        return ResponseEntity.ok(allByReytingStar);
-    }
 }

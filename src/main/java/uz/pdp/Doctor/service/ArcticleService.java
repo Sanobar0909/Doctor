@@ -38,10 +38,6 @@ public class ArcticleService {
         return "Successfully posted arcticle";
     }
 
-    public List<Arcticle> getAllByReytingStar(float star){
-        return arcticleRepo.findAllByReytingStar(star);
-    }
-
     public List<Arcticle> getAll(){
         return arcticleRepo.findAll();
     }

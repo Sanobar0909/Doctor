@@ -5,9 +5,9 @@ import uz.pdp.Doctor.model.Chat;
 import uz.pdp.Doctor.model.Doctor;
 import uz.pdp.Doctor.model.User;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface ChatRepo extends JpaRepository<Chat, String> {
-    Optional<Chat> findAllByUserIs(User user);
-    Optional<Chat> findAllByDoctorIs(Doctor doctor);
+    List<Chat> findAllByUserIs(User user);
+    List<Chat> findAllByDoctorIs(Doctor doctor);
 }

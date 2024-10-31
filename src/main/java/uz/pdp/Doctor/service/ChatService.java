@@ -17,6 +17,7 @@ import uz.pdp.Doctor.repository.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,7 @@ public class ChatService {
     private final DoctorRepo doctorRepo;
     private final S3StorageService s3StorageService;
     private final FilesRepo filesRepo;
+    private final UserService userService;
     private final String AWS_PUBLIC = "public";
     private final String AWS_URL = "https://medicsg40website.s3.ap-northeast-1.amazonaws.com/";
 
@@ -35,7 +37,7 @@ public class ChatService {
         return chatRepo.save(entity);
     }
 
-    public Message sendMessage(MessageDTO messageDTO, MultipartFile file){
+    public Optional<Message> sendMessage(MessageDTO messageDTO, MultipartFile file){
         Chat chat = chatRepo.findById(messageDTO.chatId())
                 .orElseThrow(() -> new IllegalArgumentException("Chat not found with id: " + messageDTO.chatId()));
         switch (messageDTO.messageType()){
@@ -46,7 +48,7 @@ public class ChatService {
                         .messageType(MessageType.MESSAGE)
                         .time(LocalTime.now())
                         .date(LocalDate.now()).build();
-                return messageRepo.save(build);
+                return Optional.of(messageRepo.save(build));
             }
             case CALL -> {
                 Call entity = CallMapper.CALL_MAPPER.toEntity(messageDTO.callDTO());
@@ -59,7 +61,7 @@ public class ChatService {
                         .for_id(messageDTO.for_id())
                         .from_id(messageDTO.from_id())
                         .messageType(MessageType.CALL).build();
-                return messageRepo.save(build);
+                return Optional.of(messageRepo.save(build));
             }
             case FILE -> {
                 Files files = s3StorageService.save(file,AWS_PUBLIC);
@@ -72,13 +74,17 @@ public class ChatService {
                         .date(LocalDate.now())
                         .time(LocalTime.now())
                         .files(save).build();
-                return messageRepo.save(build);
+                return Optional.of(messageRepo.save(build));
             }
         }
         return null;
     }
 
-    public boolean remove(String messageId){
+    public Optional<Message> getMessage(String messageId){
+        return messageRepo.findById(messageId);
+    }
+
+    public boolean removeMessage(String messageId){
         Message message = messageRepo.findById(messageId)
                 .orElseThrow(() -> new IllegalArgumentException("Message not found with id: " + messageId));
         switch (message.getMessageType()){
@@ -105,5 +111,19 @@ public class ChatService {
         Chat chat = chatRepo.findById(chatId)
                 .orElseThrow(() -> new IllegalArgumentException("Chat not found with id: " + chatId));
         return messageRepo.findAllByChatIs(chat);
+    }
+
+    public List<Chat> getAllChatUser() {
+        return chatRepo.findAllByUserIs(userService.getCurrentUser().get());
+    }
+
+    public List<Chat> getAllChatDoctor() {
+        return null;
+    }
+
+    public void removeChat(String chatId) {
+        Chat chat = chatRepo.findById(chatId)
+                .orElseThrow(() -> new IllegalArgumentException("Chat not found with id: " + chatId));
+        chatRepo.delete(chat);
     }
 }

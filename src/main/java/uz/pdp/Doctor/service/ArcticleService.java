@@ -12,6 +12,7 @@ import uz.pdp.Doctor.repository.DoctorRepo;
 import uz.pdp.Doctor.repository.FilesRepo;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,14 @@ public class ArcticleService {
         build.setImage(savedFile);
         arcticleRepo.save(build);
         return "Successfully posted arcticle";
+    }
+
+    public List<Arcticle> getAllByReytingStar(float star){
+        return arcticleRepo.findAllByReytingStar(star);
+    }
+
+    public List<Arcticle> getAll(){
+        return arcticleRepo.findAll();
     }
 
     public String update(String arcticleId, ArcticleDTO arcticleDTO, MultipartFile file){

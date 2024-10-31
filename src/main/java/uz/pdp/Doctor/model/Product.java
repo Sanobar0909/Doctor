@@ -1,9 +1,8 @@
 package uz.pdp.Doctor.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,7 +16,16 @@ public class Product extends BaseEntity{
     private Long price;
     private String description;
     private Integer quantity;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratings;
     @ManyToOne
     @JoinColumn(name = "files_id")
     private Files files;
+
+    public double calculateAverageRating() {
+        return ratings.stream()
+                .mapToInt(Rating::getScore)
+                .average()
+                .orElse(0.0);
+    }
 }

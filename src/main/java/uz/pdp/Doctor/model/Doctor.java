@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "doctor")
@@ -19,9 +20,8 @@ public class Doctor extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private DoctorCategory category;
-    @ManyToOne
-    @JoinColumn(name = "reyting_id")
-    private Reyting reyting;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rating> ratings;
     private String email;
     private String password;
     @ManyToOne
@@ -29,14 +29,20 @@ public class Doctor extends BaseEntity{
     private Files files;
 
     @Builder
-    public Doctor(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, String last_name, String first_name, DoctorCategory category, Reyting reyting, String email, String password, Files files) {
-        super(id, createBy, createdDate, updatedDate, updateBy);
+    public Doctor(String last_name, String first_name, DoctorCategory category, List<Rating> ratings, String email, String password, Files files) {
         this.last_name = last_name;
         this.first_name = first_name;
         this.category = category;
-        this.reyting = reyting;
+        this.ratings = ratings;
         this.email = email;
         this.password = password;
         this.files = files;
+    }
+
+    public double calculateAverageRating() {
+        return ratings.stream()
+                .mapToInt(Rating::getScore)
+                .average()
+                .orElse(0.0);
     }
 }

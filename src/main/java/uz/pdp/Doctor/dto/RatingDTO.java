@@ -2,8 +2,9 @@ package uz.pdp.Doctor.dto;
 
 import uz.pdp.Doctor.enums.ReytingType;
 
-public record ReytingDTO (
+public record RatingDTO(
         ReytingType type,
-        float star
+        int score,
+        String fromId
 ){
 }

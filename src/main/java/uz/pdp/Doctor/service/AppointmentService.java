@@ -19,7 +19,7 @@ public class AppointmentService {
 
     public Appointment create(AppointmentDTO appointmentDTO){
         Doctor doctor = doctorRepo.findById(appointmentDTO.doctorId())
-                .orElseThrow(() -> new IllegalArgumentException("Doctor not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found " + appointmentDTO.doctorId()));
         Appointment build = Appointment.builder().date(appointmentDTO.date())
                 .time(appointmentDTO.time())
                 .day(appointmentDTO.day())
@@ -29,9 +29,9 @@ public class AppointmentService {
 
     public Appointment update(String id, AppointmentDTO appointmentDTO){
         Doctor doctor = doctorRepo.findById(appointmentDTO.doctorId())
-                .orElseThrow(() -> new IllegalArgumentException("Doctor not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found " + appointmentDTO.doctorId()));
         Appointment appointment = appointmentRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found with id: " + id));
         appointment.setDate(appointmentDTO.date());
         appointment.setTime(appointmentDTO.time());
         appointment.setDay(appointmentDTO.day());
@@ -41,13 +41,13 @@ public class AppointmentService {
 
     public List<Appointment> getAllAppointmentByDoctorId(String doctorId){
         Doctor doctor = doctorRepo.findById(doctorId)
-                .orElseThrow(() -> new IllegalArgumentException("Doctor not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found with id: " + doctorId));
         return appointmentRepo.findAllByDoctorIs(doctor);
     }
 
     public void remove(String id){
         Appointment appointment = appointmentRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Appointment not found with id: " + id));
         appointmentRepo.delete(appointment);
     }
 }

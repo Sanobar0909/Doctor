@@ -14,18 +14,17 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Reyting extends BaseEntity{
+public class Rating extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReytingType type;
-    private Integer count;
-    private float star;
+    private int score;
+    private String from_id;
 
     @Builder
-    public Reyting(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, ReytingType type, Integer count, float star) {
-        super(id, createBy, createdDate, updatedDate, updateBy);
+    public Rating(ReytingType type, int score, String from_id) {
         this.type = type;
-        this.count = count;
-        this.star = star;
+        this.score = score;
+        this.from_id = from_id;
     }
 }

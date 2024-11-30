@@ -16,7 +16,7 @@ public class Product extends BaseEntity{
     private Long price;
     private String description;
     private Integer quantity;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     private List<Rating> ratings;
     @ManyToOne
     @JoinColumn(name = "files_id")

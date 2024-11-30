@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uz.pdp.Doctor.repository.UserRepo;
 import uz.pdp.Doctor.dto.AuthenticationDTO;
 import uz.pdp.Doctor.dto.UserDTO;
 import uz.pdp.Doctor.exception.EmailOrPasswordWrong;
@@ -22,7 +23,6 @@ import uz.pdp.Doctor.model.Role;
 import uz.pdp.Doctor.model.User;
 import uz.pdp.Doctor.repository.FilesRepo;
 import uz.pdp.Doctor.repository.RoleRepo;
-import uz.pdp.Doctor.repository.UserRepo;
 import uz.pdp.Doctor.util.JwtUtil;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final S3StorageService s3StorageService;
     private final String AWS_PUBLIC = "public";
-    private final String AWS_URL = "https://sanobar.s3.ap-northeast-1.amazonaws.com/";
+    private final String AWS_URL = "https://medicsg40website.s3.ap-northeast-1.amazonaws.com/";
     private final FilesRepo filesRepo;
     private final JavaMailSender javaMailSender;
 

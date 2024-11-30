@@ -7,7 +7,6 @@ import uz.pdp.Doctor.model.Appointment;
 import uz.pdp.Doctor.model.Doctor;
 import uz.pdp.Doctor.repository.AppointmentRepo;
 import uz.pdp.Doctor.repository.DoctorRepo;
-import uz.pdp.Doctor.repository.FilesRepo;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package uz.pdp.Doctor.dto;
 
-import uz.pdp.Doctor.enums.ReytingType;
+import uz.pdp.Doctor.enums.RatingType;
 
 public record RatingDTO(
-        ReytingType type,
+        RatingType type,
         int score,
         String fromId
 ){

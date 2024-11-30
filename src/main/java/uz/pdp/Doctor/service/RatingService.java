@@ -10,7 +10,7 @@ import uz.pdp.Doctor.model.Rating;
 import uz.pdp.Doctor.repository.ArcticleRepo;
 import uz.pdp.Doctor.repository.DoctorRepo;
 import uz.pdp.Doctor.repository.ProductRepo;
-import uz.pdp.Doctor.repository.ReytingRepo;
+import uz.pdp.Doctor.repository.RatingRepo;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class RatingService {
-    private final ReytingRepo ratingRepo;
+    private final RatingRepo ratingRepo;
     private final ProductRepo productRepo;
     private final DoctorRepo doctorRepo;
     private final ArcticleRepo arcticleRepo;

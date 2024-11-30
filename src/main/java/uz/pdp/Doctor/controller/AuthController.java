@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.Doctor.dto.AuthenticationDTO;
 import uz.pdp.Doctor.dto.UserDTO;
+import uz.pdp.Doctor.model.Role;
 import uz.pdp.Doctor.model.User;
 import uz.pdp.Doctor.service.UserService;
 

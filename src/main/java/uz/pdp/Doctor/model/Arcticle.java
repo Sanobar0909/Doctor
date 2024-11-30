@@ -25,7 +25,7 @@ public class Arcticle extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "files_id")
     private Files image;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "arcticle")
     private List<Rating> ratings;
 
     @Builder

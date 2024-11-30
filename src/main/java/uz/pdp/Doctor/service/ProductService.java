@@ -23,7 +23,7 @@ public class ProductService {
     private final PaymentService paymentService;
     private final S3StorageService s3StorageService;
     private final String AWS_PUBLIC = "public";
-    private final String AWS_URL = "https://sanobar.s3.ap-northeast-1.amazonaws.com/";
+    private final String AWS_URL = "https://medicsg40website.s3.ap-northeast-1.amazonaws.com/";
 
     public String addProduct(ProductDTO productDTO, MultipartFile file) {
         Product product = ProductMapper.PRODUCT_MAPPER.toEntity(productDTO);

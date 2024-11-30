@@ -1,6 +1,6 @@
 package uz.pdp.Doctor.enums;
 
-public enum ReytingType {
+public enum RatingType {
     DOCTOR,
     MEDICINE,
     ARCTICLES

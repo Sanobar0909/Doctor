@@ -20,7 +20,7 @@ public class Doctor extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private DoctorCategory category;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "doctor")
     private List<Rating> ratings;
     private String email;
     private String password;

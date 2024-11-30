@@ -12,6 +12,4 @@ import java.util.Optional;
 public interface DoctorRepo extends JpaRepository<Doctor, String> {
     Optional<Doctor> findByEmail(String email);
     List<Doctor> findAllByCategory(DoctorCategory category);
-    List<Doctor> findAllByLast_nameContaining(String last_name);
-    List<Doctor> findAllByFirst_nameContaining(String first_name);
 }

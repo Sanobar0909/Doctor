@@ -17,12 +17,22 @@ public class Rating extends BaseEntity{
     @Column(nullable = false)
     private RatingType type;
     private int score;
-    private String from_id;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+    @ManyToOne
+    @JoinColumn(name = "arcticle_id")
+    private Arcticle arcticle;
 
     @Builder
-    public Rating(RatingType type, int score, String from_id) {
+    public Rating(RatingType type, int score, Doctor doctor, Product product, Arcticle arcticle) {
         this.type = type;
         this.score = score;
-        this.from_id = from_id;
+        this.doctor = doctor;
+        this.product = product;
+        this.arcticle = arcticle;
     }
 }

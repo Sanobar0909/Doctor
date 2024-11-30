@@ -55,17 +55,17 @@ public class RatingService {
                 .orElseThrow(() -> new IllegalArgumentException("Rating not found with id: " + id));
         switch (rating.getType()) {
             case MEDICINE -> {
-                Product product = productRepo.findById(rating.getFrom_id()).get();
+                Product product = productRepo.findById(rating.getProduct().getId()).get();
                 product.setRatings(delete(product.getRatings(), rating));
                 return Optional.of(product);
             }
             case DOCTOR -> {
-                Doctor doctor = doctorRepo.findById(rating.getFrom_id()).get();
+                Doctor doctor = doctorRepo.findById(rating.getDoctor().getId()).get();
                 doctor.setRatings(delete(doctor.getRatings(), rating));
                 return Optional.of(doctor);
             }
             case ARCTICLES -> {
-                Arcticle arcticle = arcticleRepo.findById(rating.getFrom_id()).get();
+                Arcticle arcticle = arcticleRepo.findById(rating.getArcticle().getId()).get();
                 arcticle.setRatings(delete(arcticle.getRatings(), rating));
                 return Optional.of(arcticle);
             }
@@ -74,11 +74,30 @@ public class RatingService {
     }
 
     private List<Rating> save(RatingDTO ratingDTO, List<Rating> ratings){
-        Rating build = Rating.builder().from_id(ratingDTO.fromId())
-                .score(ratingDTO.score())
-                .type(ratingDTO.type()).build();
-        ratings.add(ratingRepo.save(build));
-        return ratings;
+        switch (ratingDTO.type()) {
+            case MEDICINE -> {
+                Rating build = Rating.builder().product(productRepo.findById(ratingDTO.fromId()).get())
+                        .score(ratingDTO.score())
+                        .type(ratingDTO.type()).build();
+                ratings.add(ratingRepo.save(build));
+                return ratings;
+            }
+            case DOCTOR -> {
+                Rating build = Rating.builder().doctor(doctorRepo.findById(ratingDTO.fromId()).get())
+                        .score(ratingDTO.score())
+                        .type(ratingDTO.type()).build();
+                ratings.add(ratingRepo.save(build));
+                return ratings;
+            }
+            case ARCTICLES -> {
+                Rating build = Rating.builder().arcticle(arcticleRepo.findById(ratingDTO.fromId()).get())
+                        .score(ratingDTO.score())
+                        .type(ratingDTO.type()).build();
+                ratings.add(ratingRepo.save(build));
+                return ratings;
+            }
+        }
+        return null;
     }
 
     private List<Rating> delete(List<Rating> ratings, Rating rating){

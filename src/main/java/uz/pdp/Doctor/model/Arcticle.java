@@ -20,6 +20,7 @@ public class Arcticle extends BaseEntity{
     @JoinColumn(name = "author_id")
     private Doctor author;
     private String name;
+    @Column(name = "description")
     private String desc;
     private LocalDate date;
     @ManyToOne

@@ -13,6 +13,7 @@ import uz.pdp.Doctor.enums.RatingType;
 @Setter
 @NoArgsConstructor
 public class Rating extends BaseEntity{
+    private float star;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RatingType type;
@@ -28,7 +29,8 @@ public class Rating extends BaseEntity{
     private Arcticle arcticle;
 
     @Builder
-    public Rating(RatingType type, int score, Doctor doctor, Product product, Arcticle arcticle) {
+    public Rating(float star,RatingType type, int score, Doctor doctor, Product product, Arcticle arcticle) {
+        this.star = star;
         this.type = type;
         this.score = score;
         this.doctor = doctor;

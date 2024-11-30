@@ -7,5 +7,5 @@ import uz.pdp.Doctor.model.Rating;
 
 @Repository
 public interface RatingRepo extends JpaRepository<Rating, String > {
-    Rating findByStarAndType(float star, RatingType ratingType);
+    Rating findByStarAndType(float star, RatingType type);
 }

@@ -17,7 +17,7 @@ import java.io.InputStream;
 
 @Service
 public class S3StorageService {
-    private final String bucketName = "medicsg40website";
+    private final String bucketName = "sanobar";
     private final AmazonS3 s3Client;
     private final FilesRepo imagesRepo;
 

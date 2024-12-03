@@ -7,11 +7,7 @@ import uz.pdp.Doctor.dto.ChatDTO;
 import uz.pdp.Doctor.dto.MessageDTO;
 import uz.pdp.Doctor.enums.MessageType;
 import uz.pdp.Doctor.mapper.CallMapper;
-import uz.pdp.Doctor.mapper.ChatMapper;
-import uz.pdp.Doctor.model.Call;
-import uz.pdp.Doctor.model.Chat;
-import uz.pdp.Doctor.model.Files;
-import uz.pdp.Doctor.model.Message;
+import uz.pdp.Doctor.model.*;
 import uz.pdp.Doctor.repository.*;
 
 import java.time.LocalDate;
@@ -26,18 +22,22 @@ public class ChatService {
     private final MessageRepo messageRepo;
     private final CallRepo callRepo;
     private final DoctorRepo doctorRepo;
-    private final S3StorageService s3StorageService;
-    private final FilesRepo filesRepo;
     private final UserService userService;
-    private final String AWS_PUBLIC = "public";
-    private final String AWS_URL = "https://medicsg40website.s3.ap-northeast-1.amazonaws.com/";
+    private final UserRepo userRepo;
 
     public Chat createChat(ChatDTO chatDTO){
-        Chat entity = ChatMapper.CHAT_MAPPER.toEntity(chatDTO);
+        User user = userRepo.findById(chatDTO.user_id())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + chatDTO.user_id()));
+        Doctor doctor = doctorRepo.findById(chatDTO.doctor_id())
+                .orElseThrow(() -> new IllegalArgumentException("Doctor not found with ID: " + chatDTO.doctor_id()));
+        Chat entity = Chat.builder()
+                .user(user)
+                .doctor(doctor)
+                .build();
         return chatRepo.save(entity);
     }
 
-    public Optional<Message> sendMessage(MessageDTO messageDTO, MultipartFile file){
+    public Optional<Message> sendMessage(MessageDTO messageDTO){
         Chat chat = chatRepo.findById(messageDTO.chatId())
                 .orElseThrow(() -> new IllegalArgumentException("Chat not found with id: " + messageDTO.chatId()));
         switch (messageDTO.messageType()){
@@ -46,6 +46,7 @@ public class ChatService {
                         .for_id(messageDTO.for_id())
                         .from_id(messageDTO.from_id())
                         .messageType(MessageType.MESSAGE)
+                        .text(messageDTO.text())
                         .time(LocalTime.now())
                         .date(LocalDate.now()).build();
                 return Optional.of(messageRepo.save(build));
@@ -61,19 +62,6 @@ public class ChatService {
                         .for_id(messageDTO.for_id())
                         .from_id(messageDTO.from_id())
                         .messageType(MessageType.CALL).build();
-                return Optional.of(messageRepo.save(build));
-            }
-            case FILE -> {
-                Files files = s3StorageService.save(file,AWS_PUBLIC);
-                files.setUrl(AWS_URL + files.getPath());
-                Files save = filesRepo.save(files);
-                Message build = Message.builder().chat(chat)
-                        .messageType(MessageType.FILE)
-                        .for_id(messageDTO.for_id())
-                        .from_id(messageDTO.from_id())
-                        .date(LocalDate.now())
-                        .time(LocalTime.now())
-                        .files(save).build();
                 return Optional.of(messageRepo.save(build));
             }
         }
@@ -97,12 +85,6 @@ public class ChatService {
                 messageRepo.delete(message);
                 return true;
             }
-            case FILE -> {
-                filesRepo.delete(message.getFiles());
-                s3StorageService.delete(message.getFiles().getPath());
-                messageRepo.delete(message);
-                return true;
-            }
         }
         return false;
     }
@@ -114,7 +96,7 @@ public class ChatService {
     }
 
     public List<Chat> getAllChatUser() {
-        return chatRepo.findAllByUserIs(userService.getCurrentUser().get());
+        return chatRepo.findAllByUserIs(userService.getCurrentUser());
     }
 
     public List<Chat> getAllChatDoctor() {

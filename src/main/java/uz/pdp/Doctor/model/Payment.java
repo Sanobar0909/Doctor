@@ -5,6 +5,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -18,5 +20,7 @@ public class Payment extends BaseEntity{
     private double subtotals;
     private double other_expenses;
     private double totals;
-    private Integer card_number;
+    private String card_number;
+    private String status; // PENDING, COMPLETED
+    private LocalDateTime paymentDate;
 }

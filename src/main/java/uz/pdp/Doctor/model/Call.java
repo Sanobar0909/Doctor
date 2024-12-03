@@ -8,6 +8,7 @@ import lombok.Setter;
 import uz.pdp.Doctor.enums.CallType;
 
 import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,15 +27,13 @@ public class Call extends BaseEntity{
     private CallType type;
     private LocalDate date;
     private LocalTime time;
-    private Time talk;
 
     @Builder
-    public Call(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Chat chat, CallType type, LocalDate date, LocalTime time, Time talk) {
+    public Call(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Chat chat, CallType type, LocalDate date, LocalTime time) {
         super(id, createBy, createdDate, updatedDate, updateBy);
         this.chat = chat;
         this.type = type;
         this.date = date;
         this.time = time;
-        this.talk = talk;
     }
 }

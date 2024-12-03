@@ -43,17 +43,5 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .roles("ADMIN")
                 .build();
         return build;
-
-//        if (doctor!=null){
-//            Set<GrantedAuthority> authorities = user.getRoles().stream()
-//                    .map(role -> new SimpleGrantedAuthority(role.getName()))
-//                    .collect(Collectors.toSet());
-//            return new CustomUserDetails(doctor.getEmail(), doctor.getPassword(), authorities);
-//        }
-//        Set<GrantedAuthority> authorities = user.getRoles().stream()
-//                .map(role -> new SimpleGrantedAuthority(role.getName()))
-//                .collect(Collectors.toSet());
-//
-//        return new CustomUserDetails(user.getEmail(), user.getPassword(), authorities);
     }
 }

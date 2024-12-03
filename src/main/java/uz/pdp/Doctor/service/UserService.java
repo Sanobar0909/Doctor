@@ -75,10 +75,14 @@ public class UserService {
         Role savedRole = roleRepo.save(newRole);
         user.setRoles(Collections.singletonList(savedRole));
 
-        Files files = s3StorageService.save(file, AWS_PUBLIC);
-        files.setUrl(AWS_URL + files.getPath());
-        Files savedFile = filesRepo.save(files);
-        user.setFiles(savedFile);
+        if (file != null && !file.isEmpty()) {
+            Files files = s3StorageService.save(file, AWS_PUBLIC);
+            files.setUrl(AWS_URL + files.getPath());
+            Files savedFile = filesRepo.save(files);
+            user.setFiles(savedFile);
+        }else {
+            user.setFiles(null);
+        }
         return userRepo.save(user);
     }
 
@@ -109,12 +113,17 @@ public class UserService {
         javaMailSender.send(mimeMessage);
     }
 
-    public Optional<User> getCurrentUser() {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String name = authentication.getName();
-            return userRepo.findByEmail(name);
+            Optional<User> userOpt = userRepo.findByEmail(name);
+            if (userOpt.isPresent()) {
+                return userOpt.get();
+            }
+            throw new IllegalArgumentException("User not found");
         }
-        return Optional.empty();
+        throw new IllegalStateException("No authenticated user");
     }
+
 }

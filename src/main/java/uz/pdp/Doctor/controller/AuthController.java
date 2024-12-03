@@ -35,11 +35,11 @@ public class AuthController {
     })
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> register(@RequestParam("full_name") String full_name,
-                                         @RequestParam("email") String email,
-                                         @RequestParam("password") String password,
-                                         @RequestParam("files") MultipartFile file) {
+                                           @RequestParam("email") String email,
+                                           @RequestParam("password") String password,
+                                           @RequestParam(required = false, value = "files") MultipartFile file) {
         UserDTO userDTO = new UserDTO(full_name, email, password);
-        userService.register(userDTO,file);
+        userService.register(userDTO, file);
         return ResponseEntity.ok("Successful");
     }
 

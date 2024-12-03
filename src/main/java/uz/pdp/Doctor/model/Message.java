@@ -28,15 +28,12 @@ public class Message extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "call_id")
     private Call call;
-    @ManyToOne
-    @JoinColumn(name = "files_id")
-    private Files files;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MessageType messageType;
 
     @Builder
-    public Message(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Chat chat, String from_id, String for_id, String text, LocalDate date, LocalTime time, Call call, Files files, MessageType messageType) {
+    public Message(String id, String createBy, LocalDateTime createdDate, LocalDateTime updatedDate, String updateBy, Chat chat, String from_id, String for_id, String text, LocalDate date, LocalTime time, Call call, MessageType messageType) {
         super(id, createBy, createdDate, updatedDate, updateBy);
         this.chat = chat;
         this.from_id = from_id;
@@ -45,7 +42,6 @@ public class Message extends BaseEntity{
         this.date = date;
         this.time = time;
         this.call = call;
-        this.files = files;
         this.messageType = messageType;
     }
 }

@@ -1,5 +1,7 @@
 package uz.pdp.Doctor.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/doctorConsultation")
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Chats", description = "Enables communication between doctors and patients through a text editor, with the option to make video calls.")
 public class ChatController {
 
     private final ChatService chatService;
@@ -42,10 +46,10 @@ public class ChatController {
         return ResponseEntity.ok(chatList);
     }
 
-    @PostMapping(value = "/sendMessage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<List<Message>> sendMessage(MessageDTO messageDTO, @RequestParam("files") MultipartFile files){
-        Message message = chatService.sendMessage(messageDTO, files).get();
-        List<Message> messageList = chatService.getAllMessageByChatId(messageDTO.chatId());
+    @PostMapping(value = "/sendMessage")
+    public ResponseEntity<List<Message>> sendMessage(MessageDTO messageDTO){
+        Message message = chatService.sendMessage(messageDTO).get();
+        List<Message> messageList = chatService.getAllMessageByChatId(message.getChat().getId());
         return ResponseEntity.ok(messageList);
     }
 

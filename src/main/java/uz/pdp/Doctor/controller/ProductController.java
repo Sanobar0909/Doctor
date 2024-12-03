@@ -3,6 +3,7 @@ package uz.pdp.Doctor.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import uz.pdp.Doctor.service.ProductService;
 
 @RestController
 @RequestMapping("/medicines")
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Medicines", description = "Manage medications including adding, updating, removing, and ordering.")
 public class ProductController {
 
@@ -35,7 +37,7 @@ public class ProductController {
                                               @RequestParam("weight") Integer weight,
                                               @RequestParam("price") Long price,
                                               @RequestParam("description") String description,
-                                              @RequestParam("files") MultipartFile files) {
+                                              @RequestParam(required = false, value = "files") MultipartFile files) {
         try {
             ProductDTO productDTO = new ProductDTO(name, weight, price, description);
             String result = productService.addProduct(productDTO, files);
@@ -89,10 +91,11 @@ public class ProductController {
     })
     @PostMapping("/order/{id}")
     public ResponseEntity<String> orderMedicine(@PathVariable("id") String id,
-                                                @RequestParam("quantity") int quantity) {
+                                                @RequestParam("quantity") int quantity,
+                                                @RequestParam(required = false, value = "card number") String cardNumber) {
         try {
-            OrderDTO orderDTO = new OrderDTO(id,quantity);
-            String result = productService.orderProduct(orderDTO);
+            OrderDTO orderDTO = new OrderDTO(id, quantity);
+            String result = productService.orderProduct(orderDTO,cardNumber);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Failed to order medication: " + e.getMessage(), HttpStatus.NOT_FOUND);

@@ -16,4 +16,8 @@ public class PaymentService {
     public Optional<Payment> getPaymentForUser(User user) {
         return paymentRepo.findByUserId(user.getId());
     }
+
+    public void save(Payment payment) {
+        paymentRepo.save(payment);
+    }
 }

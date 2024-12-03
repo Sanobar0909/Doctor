@@ -17,6 +17,10 @@ public class Order extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     private Double price;
     private Integer weight;
+    private int quantity;
 }

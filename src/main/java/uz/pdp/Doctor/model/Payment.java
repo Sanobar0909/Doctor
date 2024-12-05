@@ -5,8 +5,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
@@ -18,9 +16,9 @@ public class Payment extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
     private double subtotals;
-    private double other_expenses;
+    private double taxes;
     private double totals;
-    private String card_number;
-    private String status; // PENDING, COMPLETED
-    private LocalDateTime paymentDate;
+    private String cardNumber;
+    private String status;
+
 }

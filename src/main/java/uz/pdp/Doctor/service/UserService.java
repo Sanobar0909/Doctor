@@ -39,12 +39,13 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final S3StorageService s3StorageService;
+    private final VerificationService verificationService;
     private final String AWS_PUBLIC = "public";
     private final String AWS_URL = "https://medicsg40website.s3.ap-northeast-1.amazonaws.com/";
     private final FilesRepo filesRepo;
     private final JavaMailSender javaMailSender;
 
-    public UserService(UserRepo userRepo, RoleRepo roleRepo, RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtil, S3StorageService s3StorageService, FilesRepo filesRepo, JavaMailSender javaMailSender) {
+    public UserService(UserRepo userRepo, RoleRepo roleRepo, RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtil jwtUtil, S3StorageService s3StorageService, VerificationService verificationService, FilesRepo filesRepo, JavaMailSender javaMailSender) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.refreshTokenService = refreshTokenService;
@@ -52,11 +53,12 @@ public class UserService {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.s3StorageService = s3StorageService;
+        this.verificationService = verificationService;
         this.filesRepo = filesRepo;
         this.javaMailSender = javaMailSender;
     }
 
-    public User register(UserDTO userDTO, MultipartFile file) {
+    public String register(UserDTO userDTO, MultipartFile file) {
         if (userRepo.findByEmail(userDTO.email()).isPresent()) {
             throw new EmailOrPasswordWrong("User with this email already exists.", HttpStatus.CONFLICT);
         }
@@ -83,7 +85,7 @@ public class UserService {
         }else {
             user.setFiles(null);
         }
-        return userRepo.save(user);
+        return "Verification code has been sent.";
     }
 
     public ResponseEntity<AuthenticationDTO> authentication(String email, String password) {
@@ -101,7 +103,7 @@ public class UserService {
         }
     }
 
-    public void sendMail(String recipientEmail) throws MessagingException, IOException {
+    public String sendMail(String recipientEmail) throws MessagingException, IOException {
         String verificationCode = String.format("%06d", new Random().nextInt(999999));
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -109,9 +111,21 @@ public class UserService {
         mimeMessageHelper.setTo(recipientEmail);
         mimeMessageHelper.setSubject("Verification Code");
         String content = "Your verification code is: " + verificationCode;
-        mimeMessageHelper.setText(content, true);
+        mimeMessageHelper.setText(content, verificationCode);
+        System.out.println(verificationCode);
         javaMailSender.send(mimeMessage);
+        return verificationCode;
     }
+
+    public void saveUserAfterVerification(String email) {
+        User user = userRepo.findByEmail(email).get();
+        if (user != null) {
+            userRepo.save(user);
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
 
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -126,4 +140,33 @@ public class UserService {
         throw new IllegalStateException("No authenticated user");
     }
 
+    public String updateUserProfile(String fullName, MultipartFile file) {
+        User user = getCurrentUser();
+        boolean isUpdated = false;
+
+        if (fullName != null && !fullName.isEmpty()) {
+            user.setFull_name(fullName);
+            isUpdated = true;
+        }
+
+        if (file != null && !file.isEmpty()) {
+            Files files = s3StorageService.save(file, AWS_PUBLIC);
+            files.setUrl(AWS_URL + files.getPath());
+            Files savedFile = filesRepo.save(files);
+            user.setFiles(savedFile);
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
+            userRepo.save(user);
+            return "Profile updated successfully.";
+        }
+
+        return "No changes were made.";
+    }
+
+
+    public void logout(String email) {
+
+    }
 }

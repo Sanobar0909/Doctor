@@ -16,6 +16,7 @@ import uz.pdp.Doctor.model.User;
 import uz.pdp.Doctor.service.UserService;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
@@ -37,10 +38,10 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestParam("full_name") String full_name,
                                            @RequestParam("email") String email,
                                            @RequestParam("password") String password,
-                                           @RequestParam(required = false, value = "files") MultipartFile file) {
+                                           @RequestParam(required = false, value = "files") MultipartFile file) throws MessagingException, IOException {
         UserDTO userDTO = new UserDTO(full_name, email, password);
         userService.register(userDTO, file);
-        return ResponseEntity.ok("Successful");
+        return ResponseEntity.ok(userService.sendMail(email));
     }
 
     @Operation(summary = "User Authentication", description = "Welcome back! Use this endpoint to sign in with your email and password.")
@@ -48,7 +49,7 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Successfully authenticated"),
             @ApiResponse(responseCode = "401", description = "Invalid credentials")
     })
-    @PostMapping("/authentication")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationDTO> authentication(@RequestParam("email") String email, @RequestParam("password") String password) {
         ResponseEntity<AuthenticationDTO> authentication = userService.authentication(email, password);
         return authentication;
@@ -59,8 +60,48 @@ public class AuthController {
             @ApiResponse(responseCode = "200", description = "Successfully"),
             @ApiResponse(responseCode = "401", description = "Invalid credentials")
     })
-    @PostMapping("/send-email")
-    public void sendEmail(@RequestParam("email") String email) throws MessagingException, IOException {
-        userService.sendMail(email);
+    @PostMapping("/configuration-code")
+    public ResponseEntity<String> sendEmail(@RequestParam("code") String code, @RequestParam("email") String email) throws MessagingException, IOException {
+        String verificationCode = userService.sendMail(email);
+        if (Objects.equals(verificationCode, code)) {
+            userService.saveUserAfterVerification(email);
+            return ResponseEntity.ok("Successfully verified and user saved");
+        }
+        return ResponseEntity.status(401).body("Invalid verification code");
+    }
+
+    @Operation(summary = "View Profile", description = "View the details of the logged-in user's profile.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profile details retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access")
+    })
+    @GetMapping("/profile")
+    public ResponseEntity<User> viewProfile() {
+        User user = userService.getCurrentUser();
+        return ResponseEntity.ok(user);
+    }
+
+    @Operation(summary = "Update Profile", description = "Update the profile information of the logged-in user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profile updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access")
+    })
+    @PutMapping(value = "/Update_profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> updateProfile(@RequestParam(required = false, value = "full_name") String fullName,
+                                                @RequestParam(required = false, value = "file") MultipartFile file) throws IOException {
+        userService.updateUserProfile(fullName, file);
+        return ResponseEntity.ok("Profile updated successfully");
+    }
+
+    @Operation(summary = "Logout", description = "Log out the currently authenticated user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully logged out"),
+            @ApiResponse(responseCode = "401", description = "User not logged in")
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestParam("email") String email) {
+        userService.logout(email);
+        return ResponseEntity.ok("Successfully logged out");
     }
 }

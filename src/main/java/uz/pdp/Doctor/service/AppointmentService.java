@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AppointmentService {
+public class  AppointmentService {
     private final AppointmentRepo appointmentRepo;
     private final DoctorRepo doctorRepo;
 

@@ -20,7 +20,8 @@ public class Order extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private Double price;
-    private Integer weight;
-    private int quantity;
+    @ManyToOne
+    @JoinColumn(name = "basket_id")
+    private Basket basket;
+    private int count;
 }

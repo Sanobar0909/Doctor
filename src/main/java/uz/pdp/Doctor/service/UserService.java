@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uz.pdp.Doctor.model.Permission;
 import uz.pdp.Doctor.repository.UserRepo;
 import uz.pdp.Doctor.dto.AuthenticationDTO;
 import uz.pdp.Doctor.dto.UserDTO;
@@ -27,6 +28,7 @@ import uz.pdp.Doctor.util.JwtUtil;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -74,6 +76,13 @@ public class UserService {
 
         Role newRole = new Role();
         newRole.setName("USER");
+        newRole.setPermissions(List.of(
+                new Permission("CREATE"),
+                new Permission("UPDATE"),
+                new Permission("ORDER"),
+                new Permission("SHOW_CARD"),
+                new Permission("BUY")
+        ));
         Role savedRole = roleRepo.save(newRole);
         user.setRoles(Collections.singletonList(savedRole));
 

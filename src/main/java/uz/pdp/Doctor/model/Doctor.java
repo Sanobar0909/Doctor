@@ -15,8 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Doctor extends BaseEntity{
-    private String last_name;
-    private String first_name;
+    private String full_name;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private DoctorCategory category;
@@ -29,9 +28,8 @@ public class Doctor extends BaseEntity{
     private Files files;
 
     @Builder
-    public Doctor(String last_name, String first_name, DoctorCategory category, List<Rating> ratings, String email, String password, Files files) {
-        this.last_name = last_name;
-        this.first_name = first_name;
+    public Doctor(String full_name, DoctorCategory category, List<Rating> ratings, String email, String password, Files files) {
+        this.full_name = full_name;
         this.category = category;
         this.ratings = ratings;
         this.email = email;

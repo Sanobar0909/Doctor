@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.Doctor.dto.AuthenticationDTO;
 import uz.pdp.Doctor.dto.UserDTO;
 import uz.pdp.Doctor.model.Role;
+import uz.pdp.Doctor.model.TemporaryUser;
 import uz.pdp.Doctor.model.User;
+import uz.pdp.Doctor.service.TemporaryUserService;
 import uz.pdp.Doctor.service.UserService;
 
 import java.io.IOException;
@@ -23,9 +25,11 @@ import java.util.Objects;
 @Tag(name = "Authentication", description = "Sign in and sign up here")
 public class AuthController {
     private final UserService userService;
+    private final TemporaryUserService temporaryUserService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, TemporaryUserService temporaryUserService) {
         this.userService = userService;
+        this.temporaryUserService = temporaryUserService;
     }
 
     @Operation(summary = "User Registration", description = "Welcome! Please use this endpoint to register a new user. You can upload a profile picture.")
@@ -40,8 +44,8 @@ public class AuthController {
                                            @RequestParam("password") String password,
                                            @RequestParam(required = false, value = "files") MultipartFile file) throws MessagingException, IOException {
         UserDTO userDTO = new UserDTO(full_name, email, password);
-        userService.register(userDTO, file);
-        return ResponseEntity.ok(userService.sendMail(email));
+        String register = userService.register(userDTO, file);
+        return ResponseEntity.ok(register);
     }
 
     @Operation(summary = "User Authentication", description = "Welcome back! Use this endpoint to sign in with your email and password.")
@@ -61,14 +65,17 @@ public class AuthController {
             @ApiResponse(responseCode = "401", description = "Invalid credentials")
     })
     @PostMapping("/configuration-code")
-    public ResponseEntity<String> sendEmail(@RequestParam("code") String code, @RequestParam("email") String email) throws MessagingException, IOException {
-        String verificationCode = userService.sendMail(email);
-        if (Objects.equals(verificationCode, code)) {
-            userService.saveUserAfterVerification(email);
+    public ResponseEntity<String> sendEmail(@RequestParam("code") String code, @RequestParam("email") String email) {
+        TemporaryUser temporaryUser = temporaryUserService.getTemporaryUserByEmail(email);
+
+        if (temporaryUser != null && Objects.equals(temporaryUser.getVerificationCode(), code)) {
+            userService.saveUserAfterVerification(email,code);
             return ResponseEntity.ok("Successfully verified and user saved");
         }
+
         return ResponseEntity.status(401).body("Invalid verification code");
     }
+
 
     @Operation(summary = "View Profile", description = "View the details of the logged-in user's profile.")
     @ApiResponses(value = {

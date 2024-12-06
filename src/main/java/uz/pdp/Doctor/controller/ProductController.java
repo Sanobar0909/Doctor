@@ -117,12 +117,14 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasPermission('ROLE_SHOW_CARD')")
     @GetMapping("/myCard")
     public ResponseEntity<String> getMyCard() {
         String s = productService.myCard();
         return new ResponseEntity<>(s, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasPermission('ROLE_BUY')")
     @PostMapping("/cardNumber")
     public ResponseEntity<String> addCardNumber(@RequestParam("cardNumber") String cardNumber) {
         String buy = productService.buy(cardNumber);
@@ -157,24 +159,28 @@ public class ProductController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_LOCATION')")
     @PostMapping("/location")
     public ResponseEntity<Address> create(AddressDTO addressDTO) {
         Address address = ambulanceService.create(addressDTO);
         return new ResponseEntity<>(address, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_GET_USER_LOCATION')")
     @GetMapping("/getUserLocation")
     public ResponseEntity<Address> getUserLocation() {
         Address userAddress = ambulanceService.getUserAddress();
         return new ResponseEntity<>(userAddress, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_UPDATE_LOCATION')")
     @PutMapping("/updateLocation")
     public ResponseEntity<Address> updateLocation(AddressDTO addressDTO) {
         Address address = ambulanceService.update(addressDTO);
         return new ResponseEntity<>(address, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_MARK')")
     @PostMapping("/mark")
     public ResponseEntity<String> markAsFavorite(@RequestParam String productId) {
         String result = favoriteService.markAsFavorite(productId);

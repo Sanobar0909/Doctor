@@ -24,7 +24,6 @@ public class ProductService {
     private final PaymentRepo paymentRepo;
     private final OrderRepo orderRepo;
     private final UserService userService;
-    private final PaymentService paymentService;
     private final S3StorageService s3StorageService;
     private final AmbulanceService ambulanceService;
     private final String AWS_PUBLIC = "public";

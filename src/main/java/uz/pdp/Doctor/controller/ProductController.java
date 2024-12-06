@@ -23,7 +23,7 @@ import uz.pdp.Doctor.service.ProductService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/medicines")
+@RequestMapping("/user/medicines")
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Online Pharmacy", description = "Manage medications including adding, updating, removing, and ordering.")
 public class ProductController {
@@ -180,7 +180,7 @@ public class ProductController {
         return new ResponseEntity<>(address, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_MARK')")
+    @PreAuthorize("hasAuthority('ROLE_FAVORITE')")
     @PostMapping("/mark")
     public ResponseEntity<String> markAsFavorite(@RequestParam String productId) {
         String result = favoriteService.markAsFavorite(productId);

@@ -79,30 +79,11 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(temporaryUser.getUserDTO().password());
         user.setPassword(encodedPassword);
 
-        // Save permissions first
-        List<Permission> permissions = List.of(
-                new Permission("CREATE"),
-                new Permission("UPDATE"),
-                new Permission("DELETE"),
-                new Permission("GET"),
-                new Permission("GET_ALL"),
-                new Permission("LOCATION"),
-                new Permission("GET_USER_LOCATION"),
-                new Permission("UPDATE_LOCATION"),
-                new Permission("MARK"),
-                new Permission("ORDER"),
-                new Permission("SHOW_CARD"),
-                new Permission("BUY")
-        );
+        Role defaultRole = roleRepo.findByName("USER")
+                .orElseThrow(() -> new IllegalArgumentException("Default role not found."));
 
-        permissions.forEach(permissionRepo::save); // Save each Permission object
-
-        Role newRole = new Role();
-        newRole.setName("USER");
-        newRole.setPermissions(permissions);
-
-        Role savedRole = roleRepo.save(newRole); // Save Role after permissions are saved
-        user.setRoles(Collections.singletonList(savedRole));
+        // Fixing the roles assignment (using a list or set depending on your requirements)
+        user.setRoles(Collections.singletonList(defaultRole)); // or new HashSet<>(Collections.singletonList(defaultRole));
 
         if (temporaryUser.getFile() != null) {
             Files files = s3StorageService.save(temporaryUser.getFile(), AWS_PUBLIC);

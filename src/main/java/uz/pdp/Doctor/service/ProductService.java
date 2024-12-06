@@ -68,6 +68,11 @@ public class ProductService {
         User currentUser = userService.getCurrentUser();
         Basket basket = basketRepo.findByUserId(currentUser.getId())
                 .orElseGet(() -> Basket.builder().user(currentUser).orders(new ArrayList<>()).build());
+
+        if (basket.getId() == null) {
+            basketRepo.save(basket);
+        }
+
         Order order = Order.builder()
                 .product(product)
                 .user(currentUser)
@@ -75,10 +80,12 @@ public class ProductService {
                 .basket(basket)
                 .build();
         orderRepo.save(order);
+
         basket.getOrders().add(order);
         basketRepo.save(basket);
         return "Basket updated with product: " + product.getName();
     }
+
 
     public String myCard() {
         User currentUser = userService.getCurrentUser();
@@ -142,20 +149,6 @@ public class ProductService {
         return "Payment of $" + String.format("%.2f", payment.getTotals()) + " was successful. Your order has been placed!";
     }
 
-
-    private Payment processPayment(String cardNumber, double totalPrice) {
-        if (cardNumber == null || cardNumber.isEmpty()) {
-            throw new IllegalArgumentException("Invalid card number.");
-        }
-        double taxes = totalPrice * 0.05;
-        Payment payment = Payment.builder()
-                .subtotals(totalPrice)
-                .taxes(taxes)
-                .totals(totalPrice + taxes)
-                .build();
-        paymentRepo.save(payment);
-        return payment;
-    }
 
     public String getProductDetails(String id) {
         Product product = productRepo.findById(id)

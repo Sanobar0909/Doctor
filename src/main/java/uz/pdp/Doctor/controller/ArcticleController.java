@@ -32,4 +32,10 @@ public class ArcticleController {
         List<Arcticle> arcticleList = arcticleService.getAll();
         return ResponseEntity.ok(arcticleList);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") String id){
+        String remove = arcticleService.remove(id);
+        return ResponseEntity.ok(remove);
+    }
 }

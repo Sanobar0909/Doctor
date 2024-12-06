@@ -3,6 +3,7 @@ package uz.pdp.Doctor.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.pdp.Doctor.dto.RatingDTO;
+import uz.pdp.Doctor.enums.RatingType;
 import uz.pdp.Doctor.model.Arcticle;
 import uz.pdp.Doctor.model.Doctor;
 import uz.pdp.Doctor.model.Product;
@@ -45,6 +46,27 @@ public class RatingService {
                 arcticle.setRatings(save(ratingDTO, arcticle.getRatings()));
                 arcticleRepo.save(arcticle);
                 return Optional.of(arcticle);
+            }
+        }
+        return null;
+    }
+
+    public Double getRating(RatingType ratingType, String fromId){
+        switch (ratingType){
+            case MEDICINE ->{
+                Product product = productRepo.findById(fromId)
+                        .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + fromId));
+                return product.calculateAverageRating();
+            }
+            case DOCTOR -> {
+                Doctor doctor = doctorRepo.findById(fromId)
+                        .orElseThrow(() -> new IllegalArgumentException("Doctor not found with id: " + fromId));
+                return doctor.calculateAverageRating();
+            }
+            case ARCTICLES -> {
+                Arcticle arcticle = arcticleRepo.findById(fromId)
+                        .orElseThrow(() -> new IllegalArgumentException("Arcticle not found with id: " + fromId));
+                return arcticle.calculateAverageRating();
             }
         }
         return null;
